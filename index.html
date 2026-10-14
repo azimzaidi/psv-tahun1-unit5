@@ -1,0 +1,724 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Studio Kawanku</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/* Layout: lajur arahan langkah + alat di kiri, kertas melukis besar di kanan. Telefon: arahan, kertas, alat, butang. */
+:root{
+  --bg:#EAF3FB;
+  --surface:#FFFFFF;
+  --ink:#232A4D;
+  --muted:#58628F;
+  --line:#CFDDEE;
+  --brand:#2F6FE0;
+  --brand-edge:#1F55B8;
+  --brand-ink:#FFFFFF;
+  --edge:rgba(35,42,77,.16);
+  --on-strong:#232A4D;
+  --paper:#FFFFFF;
+  --s1:#F25C8A; --s2:#FFA63D; --s3:#22B8A8; --s4:#8E5BD6; --s5:#3D8BFF; --s6:#F0443C; --s7:#3DBE5C;
+  --s1-soft:#FFDCE7; --s2-soft:#FFE6C4; --s3-soft:#CBF2EC; --s4-soft:#E7DAFA; --s5-soft:#D6E6FF; --s6-soft:#FFD9D5; --s7-soft:#D2F3DA;
+  --f-display:"Fredoka","Trebuchet MS",ui-rounded,system-ui,sans-serif;
+  --f-body:"Nunito","Segoe UI",system-ui,-apple-system,sans-serif;
+  --r:22px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141B33; --surface:#212A4F; --ink:#F0F3FF; --muted:#B5BEE8; --line:#38437A;
+    --brand:#7FA8FF; --brand-edge:#5586EE; --brand-ink:#10183A; --edge:rgba(0,0,0,.4);
+    --s1-soft:#5A2238; --s2-soft:#573914; --s3-soft:#14473F; --s4-soft:#3C2A66; --s5-soft:#1D3C70; --s6-soft:#5A2723; --s7-soft:#1B4527;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141B33; --surface:#212A4F; --ink:#F0F3FF; --muted:#B5BEE8; --line:#38437A;
+  --brand:#7FA8FF; --brand-edge:#5586EE; --brand-ink:#10183A; --edge:rgba(0,0,0,.4);
+  --s1-soft:#5A2238; --s2-soft:#573914; --s3-soft:#14473F; --s4-soft:#3C2A66; --s5-soft:#1D3C70; --s6-soft:#5A2723; --s7-soft:#1B4527;
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+body{
+  background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.45;font-weight:700;
+  padding-inline:16px;padding-block:16px 40px;-webkit-tap-highlight-color:transparent;
+}
+h1,h2,h3,p,ol{margin:0}
+ol{padding:0;list-style:none}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;touch-action:manipulation}
+button:focus-visible,input:focus-visible{outline:4px solid var(--brand);outline-offset:3px}
+.app{max-width:1180px;margin-inline:auto;display:flex;flex-direction:column;gap:18px}
+[hidden]{display:none!important}
+
+/* warna ikut langkah */
+[data-s="1"]{--e:var(--s1);--e-soft:var(--s1-soft)}
+[data-s="2"]{--e:var(--s2);--e-soft:var(--s2-soft)}
+[data-s="3"]{--e:var(--s3);--e-soft:var(--s3-soft)}
+[data-s="4"]{--e:var(--s4);--e-soft:var(--s4-soft)}
+[data-s="5"]{--e:var(--s5);--e-soft:var(--s5-soft)}
+[data-s="6"]{--e:var(--s6);--e-soft:var(--s6-soft)}
+[data-s="7"]{--e:var(--s7);--e-soft:var(--s7-soft)}
+
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.top h1{font-family:var(--f-display);font-weight:700;font-size:clamp(1.6rem,5.4vw,2.5rem);letter-spacing:.03em;line-height:1.05}
+.sub{color:var(--muted);font-size:.95rem}
+.ask{font-family:var(--f-display);font-weight:600;font-size:clamp(1.15rem,3.6vw,1.5rem);line-height:1.2;
+  background:var(--s1-soft);border-radius:18px;padding:12px 18px;flex:1 1 260px;min-width:0}
+
+/* alat dan bahan */
+.mat{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.mat .lbl{font-family:var(--f-display);font-weight:600;background:var(--s3);color:#10302C;border-radius:12px;padding:6px 14px}
+.mitem{display:flex;align-items:center;gap:8px;background:var(--surface);border:3px solid var(--line);border-radius:16px;padding:6px 12px;
+  font-family:var(--f-display);font-weight:600;transition:border-color .15s,background .15s}
+.mitem .mi{font-size:1.4rem;line-height:1}
+.mitem.use{border-color:var(--e);background:var(--e-soft)}
+
+/* garis masa langkah */
+.tl{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.tstep{display:flex;flex-direction:column;align-items:center;gap:4px;padding:0}
+.tnum{width:min(52px,100%);aspect-ratio:1/1;border-radius:50%;background:var(--surface);border:5px solid var(--e);display:grid;place-items:center;
+  font-family:var(--f-display);font-weight:700;font-size:1.3rem;box-shadow:0 4px 0 var(--edge);transition:transform .12s}
+.tstep.on .tnum{background:var(--e);color:#fff;transform:scale(1.12);text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.tstep.done .tnum{background:var(--e-soft)}
+.ttxt{font-size:.8rem;color:var(--muted);text-align:center;line-height:1.1;min-height:2.2em}
+.tstep.on .ttxt{color:var(--ink)}
+
+/* kawasan kerja */
+.grid{display:grid;gap:14px;grid-template-columns:minmax(0,1fr);grid-template-areas:"step" "bar" "paper" "tools" "act"}
+.grid>*{min-width:0}
+.a-step{grid-area:step}.a-bar{grid-area:bar}.a-paper{grid-area:paper}.a-tools{grid-area:tools}.a-act{grid-area:act}
+.panel{background:var(--surface);border:3px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:12px}
+.stepcard{background:var(--e-soft);border:4px solid var(--e);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 5px 0 var(--edge)}
+.shead{display:flex;align-items:center;gap:12px}
+.snum{width:52px;height:52px;flex:none;border-radius:50%;background:var(--e);color:#fff;display:grid;place-items:center;
+  font-family:var(--f-display);font-weight:700;font-size:1.7rem;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.shead h2{font-family:var(--f-display);font-weight:700;font-size:1.4rem;line-height:1.1}
+.sprog{color:var(--muted);font-size:.9rem}
+.sbody{display:flex;gap:12px;align-items:center}
+.demo{width:112px;height:112px;flex:none;border-radius:16px;overflow:hidden;background:#fff;border:3px solid var(--line)}
+.demo svg{width:100%;height:100%;display:block}
+.sinst{font-size:1.1rem;line-height:1.35}
+.stip{font-size:.95rem;color:var(--muted)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:54px;padding:10px 18px;border-radius:18px;
+  background:var(--surface);color:var(--ink);border:3px solid var(--line);box-shadow:0 4px 0 var(--edge);
+  font-family:var(--f-display);font-weight:600;font-size:1.1rem;line-height:1.1;transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
+.btn[disabled]{opacity:.4;cursor:not-allowed;box-shadow:none;transform:none}
+.btn-primary{background:var(--brand);border-color:var(--brand-edge);color:var(--brand-ink)}
+.btn-next{background:var(--e);border-color:var(--e);color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.btn-danger{background:var(--s6);border-color:var(--s6);color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.btn-small{min-height:46px;font-size:1rem;padding:8px 14px}
+.btn[aria-pressed="true"]{background:var(--brand);border-color:var(--brand-edge);color:var(--brand-ink)}
+.bar{display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:10px}
+
+.plabel{font-family:var(--f-display);font-weight:600;font-size:.95rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tool,.size{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:68px;padding:6px 2px;border-radius:16px;
+  background:var(--surface);border:3px solid var(--line);font-family:var(--f-display);font-weight:600;font-size:.9rem;box-shadow:0 3px 0 var(--edge);line-height:1.1;text-align:center}
+.tool .ic{font-size:1.6rem;line-height:1}
+.tool[aria-pressed="true"],.size[aria-pressed="true"]{background:var(--brand);border-color:var(--brand-edge);color:var(--brand-ink)}
+.sizes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.dot{display:block;border-radius:50%;background:currentColor}
+.swatches{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.sw{aspect-ratio:1/1;min-height:44px;border-radius:50%;border:3px solid var(--line);position:relative;box-shadow:0 3px 0 var(--edge)}
+.sw[aria-pressed="true"]{outline:4px solid var(--brand);outline-offset:2px}
+.sw[aria-pressed="true"]::after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;font-size:1.3rem;color:#fff;text-shadow:0 0 3px #000,0 0 3px #000}
+
+/* kertas */
+.paper{position:relative;width:100%;max-width:560px;margin-inline:auto;aspect-ratio:4/5;background:var(--paper);
+  border:4px solid var(--e);border-radius:14px;box-shadow:0 8px 0 var(--edge);overflow:hidden;touch-action:none}
+#cv{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair;-webkit-user-select:none;user-select:none}
+.guide{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hint{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;color:#A9B0CF;font-family:var(--f-display);font-weight:600;
+  font-size:clamp(1.1rem,4.2vw,1.7rem);text-align:center;padding:24px}
+
+.actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.actions .btn{min-height:60px;font-size:1.1rem}
+
+/* cerita */
+.story{background:var(--surface);border:3px solid var(--line);border-radius:28px;padding:20px;display:flex;flex-direction:column;gap:18px}
+.story h2{font-family:var(--f-display);font-weight:700;font-size:clamp(1.5rem,5vw,2.2rem);line-height:1.1;text-wrap:balance}
+.story-main{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:20px;align-items:start}
+.final{width:100%;max-width:300px;aspect-ratio:4/5;border:4px solid var(--s7);border-radius:14px;background:#fff;display:block;box-shadow:0 6px 0 var(--edge)}
+.qs{display:flex;flex-direction:column;gap:14px}
+.q .ql{font-family:var(--f-display);font-weight:600;font-size:1.15rem;margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:46px;padding:8px 14px;border-radius:99px;background:var(--surface);border:3px solid var(--line);box-shadow:0 3px 0 var(--edge);font-weight:800;font-size:1rem;line-height:1.15;text-align:left}
+.chip[aria-pressed="true"]{background:var(--s7);border-color:var(--s7);color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.nameRow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.nameRow label{font-family:var(--f-display);font-weight:600;font-size:1.1rem}
+.nameRow input{flex:1 1 200px;min-width:0;min-height:50px;border-radius:14px;border:3px solid var(--line);background:var(--surface);padding:6px 14px;font-size:1.1rem}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,110px),1fr));gap:10px}
+.sfig{margin:0;display:flex;flex-direction:column;gap:4px;align-items:center;background:var(--e-soft);padding:8px;border-radius:14px}
+.sfig canvas{width:100%;height:auto;aspect-ratio:4/5;background:#fff;border-radius:8px;border:2px solid var(--e);display:block}
+.sfig figcaption{font-family:var(--f-display);font-weight:600;font-size:.9rem;text-align:center;line-height:1.1}
+.sact{display:flex;flex-wrap:wrap;gap:10px}
+
+.modal{position:fixed;inset:0;background:rgba(15,20,50,.55);display:grid;place-items:center;padding:16px;z-index:50}
+.mbox{background:var(--surface);color:var(--ink);border-radius:26px;padding:22px;max-width:440px;width:100%;max-height:100%;overflow:auto;display:flex;flex-direction:column;gap:14px;border:4px solid var(--line)}
+.mbox h3{font-family:var(--f-display);font-weight:700;font-size:1.5rem;line-height:1.15}
+.mbox img{width:100%;height:auto;display:block;border-radius:14px;border:3px solid var(--line);background:#fff}
+.mbtns{display:flex;flex-wrap:wrap;gap:10px}
+.mbtns .btn{flex:1 1 140px}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translate(-50%,24px);background:var(--ink);color:var(--bg);
+  padding:12px 20px;border-radius:99px;font-family:var(--f-display);font-weight:600;font-size:1.05rem;max-width:calc(100% - 32px);text-align:center;
+  opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:60}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (min-width:900px){
+  .grid{grid-template-columns:330px minmax(0,1fr);column-gap:22px;
+    grid-template-areas:"step bar" "tools paper" "tools act";align-items:start}
+}
+@media (max-width:700px){
+  .tnum{border-width:4px;font-size:1.1rem}
+  .ttxt{display:none}
+  .demo{width:92px;height:92px}
+  .bar .btn{padding-inline:8px;font-size:1rem}
+  .actions{grid-template-columns:1fr}
+  .story-main{grid-template-columns:minmax(0,1fr)}
+  .final{margin-inline:auto}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div>
+      <h1>STUDIO KAWANKU</h1>
+      <p class="sub">Pendidikan Seni Visual &middot; Tahun 1</p>
+    </div>
+    <p class="ask">Bolehkah kamu melukis wajah rakan kamu?</p>
+  </header>
+
+  <div id="studio" data-s="1">
+    <div class="app">
+      <div class="mat" aria-label="Alat dan Bahan">
+        <span class="lbl">Alat dan Bahan</span>
+        <span class="mitem" data-m="kertas"><span class="mi" aria-hidden="true">📄</span>Kertas</span>
+        <span class="mitem" data-m="pensel"><span class="mi" aria-hidden="true">✏️</span>Pensel</span>
+        <span class="mitem" data-m="pemadam"><span class="mi" aria-hidden="true">🧽</span>Pemadam</span>
+        <span class="mitem" data-m="warna"><span class="mi" aria-hidden="true">🖍️</span>Pensel warna</span>
+      </div>
+
+      <ol class="tl" id="tl" aria-label="Langkah melukis"></ol>
+
+      <div class="grid">
+        <section class="stepcard a-step" id="stepcard" aria-live="polite">
+          <div class="shead">
+            <div class="snum" id="snum">1</div>
+            <div>
+              <h2 id="stitle">Lukis bentuk bujur</h2>
+              <p class="sprog" id="sprog">Langkah 1 daripada 7</p>
+            </div>
+          </div>
+          <div class="sbody">
+            <div class="demo" id="demo"></div>
+            <p class="sinst" id="sinst"></p>
+          </div>
+          <p class="stip" id="stip"></p>
+        </section>
+
+        <div class="bar a-bar">
+          <button class="btn" id="btnUndo" type="button">↩ Undur</button>
+          <button class="btn" id="btnRedo" type="button">↪ Ulang</button>
+          <button class="btn" id="btnClear" type="button">🗑 Padam Semua</button>
+        </div>
+
+        <div class="a-paper">
+          <div class="paper" id="wrap">
+            <canvas id="cv" width="800" height="1000" aria-label="Kertas melukis"></canvas>
+            <svg class="guide" id="guide" viewBox="0 0 80 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+              <g fill="none" stroke="#7B83E0" stroke-width=".5" stroke-dasharray="2 1.5" opacity=".85">
+                <ellipse cx="40" cy="48" rx="22" ry="36"/>
+                <line x1="40" y1="10" x2="40" y2="86"/>
+                <line x1="16" y1="48" x2="64" y2="48"/>
+                <line x1="29" y1="66" x2="51" y2="66"/>
+                <line x1="32" y1="72" x2="48" y2="72"/>
+                <path d="M17 49 Q12 57 17 65 M63 49 Q68 57 63 65"/>
+              </g>
+              <g fill="#5560D8" font-family="Fredoka,Trebuchet MS,sans-serif" font-weight="600" font-size="3.6">
+                <text x="65" y="47.5">mata</text>
+                <text x="52.5" y="65.5">hidung</text>
+                <text x="49.5" y="73.5">mulut</text>
+                <text x="1.5" y="58">telinga</text>
+              </g>
+            </svg>
+            <div class="hint" id="hint">Lukis di atas kertas ini!</div>
+          </div>
+        </div>
+
+        <div class="panel a-tools">
+          <div class="plabel">Alat</div>
+          <div class="tools" id="tools"></div>
+          <div class="plabel">Saiz</div>
+          <div class="sizes" id="sizes"></div>
+          <div id="colorBox" hidden>
+            <div class="plabel" style="margin-bottom:10px">Warna pensel</div>
+            <div class="swatches" id="swatches"></div>
+          </div>
+          <button class="btn btn-small" id="guideBtn" type="button" aria-pressed="true">📐 Garis Panduan</button>
+        </div>
+
+        <div class="actions a-act">
+          <button class="btn" id="btnPrev" type="button">← Langkah Sebelum</button>
+          <button class="btn btn-next" id="btnNext" type="button">Langkah Seterusnya →</button>
+          <button class="btn btn-primary" id="btnSave" type="button">💾 Simpan Lukisan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="story" id="story" hidden aria-labelledby="storyT">
+    <h2 id="storyT">Hebat! Wajah rakan kamu sudah siap 🎉</h2>
+    <div class="story-main">
+      <canvas class="final" id="final" width="400" height="500" role="img" aria-label="Lukisan wajah rakan kamu"></canvas>
+      <div class="qs">
+        <p class="ql" style="font-family:var(--f-display);font-weight:700;font-size:1.3rem">Ceritakan cara kamu melukis rupa rakan kamu.</p>
+        <div id="qs"></div>
+        <div class="nameRow">
+          <label for="nama">Nama kamu</label>
+          <input id="nama" type="text" maxlength="30" autocomplete="off" placeholder="Taip nama kamu">
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="plabel" style="margin-bottom:10px">Lukisan kamu langkah demi langkah</p>
+      <div class="strip" id="strip"></div>
+    </div>
+    <div class="sact">
+      <button class="btn btn-primary" id="saveA" type="button">💾 Simpan Lukisan</button>
+      <button class="btn btn-primary" id="saveB" type="button">📝 Simpan Lukisan dan Cerita</button>
+      <button class="btn" id="back" type="button">✏️ Kembali Melukis</button>
+      <button class="btn" id="resetB" type="button">🔁 Mula Semula</button>
+    </div>
+  </section>
+</div>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="mbox">
+    <h3 id="mTitle"></h3>
+    <div id="mBody"></div>
+    <div class="mbtns" id="mBtns"></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+  document.documentElement.lang = 'ms';
+  var W = 800, H = 1000;
+  var PENCIL = '#23232F';
+
+  var STEPS = [
+    { t: 'Lukis bentuk bujur', short: 'Bujur', i: 'Lukis bentuk bujur untuk wajah rakan kamu. Lukis nipis-nipis dan ulang beberapa kali.', tip: 'Tekan pensel dengan perlahan.', tool: 'pensel', mat: ['kertas', 'pensel'], guide: true },
+    { t: 'Gelapkan bentuk yang cantik', short: 'Gelapkan', i: 'Pilih garisan bujur yang paling cantik dan gelapkan. Padam garisan yang lain dengan pemadam.', tip: 'Tekan Pemadam untuk memadam garisan lain.', tool: 'pensel', mat: ['pensel', 'pemadam'], guide: true },
+    { t: 'Buat garisan lengkung', short: 'Lengkung', i: 'Buat garisan lengkung nipis untuk mata, hidung, telinga dan mulut. Ikut garis panduan.', tip: 'Mata di tengah wajah. Telinga di tepi.', tool: 'pensel', mat: ['pensel'], guide: true },
+    { t: 'Bentukkan wajah', short: 'Bentuk', i: 'Bentukkan mata, hidung, telinga dan mulut supaya nampak jelas.', tip: 'Gelapkan garisan yang kamu mahu simpan.', tool: 'pensel', mat: ['pensel', 'pemadam'], guide: true },
+    { t: 'Lukis rambut', short: 'Rambut', i: 'Lukis rambut rakan kamu. Rambut dia lurus, kerinting atau pendek?', tip: 'Lukis garisan rambut mengikut arah tumbuh.', tool: 'pensel', mat: ['pensel'], guide: false },
+    { t: 'Lukis bahagian lain', short: 'Lain-lain', i: 'Lukis kening, leher dan baju. Tambah apa sahaja yang kamu nampak pada rakan kamu.', tip: 'Pandang rakan kamu dengan teliti.', tool: 'pensel', mat: ['pensel'], guide: false },
+    { t: 'Warnakan', short: 'Warna', i: 'Gunakan pensel warna. Warnakan lukisan dan buat kemasan supaya kemas.', tip: 'Warnakan perlahan-lahan, jangan keluar garisan.', tool: 'warna', mat: ['pensel warna', 'warna'], guide: false }
+  ];
+  var COLORS = [
+    ['Hitam', '#222230'], ['Coklat tua', '#6B4226'], ['Coklat', '#A66A3C'], ['Kulit sawo matang', '#D9955F'],
+    ['Kulit cerah', '#F6C79B'], ['Merah', '#E5383B'], ['Jingga', '#FF8A1F'], ['Kuning', '#FFD21F'],
+    ['Hijau', '#3DBE5C'], ['Biru', '#2F6FE0'], ['Ungu', '#8E5BD6'], ['Merah jambu', '#FF6FA8']
+  ];
+  var SIZES = [['kecil', 'Kecil', 10], ['sederhana', 'Sederhana', 16], ['besar', 'Besar', 26]];
+  var TOOLW = { pensel: [5, 8, 14], warna: [10, 20, 36], pemadam: [16, 30, 54] };
+  var GROUPS = [
+    { pre: 'Mula-mula saya ', opts: ['melukis bentuk bujur', 'membuat lakaran nipis', 'melukis wajah rakan saya'] },
+    { pre: 'Kemudian saya ', opts: ['memadam garisan lain', 'melukis mata, hidung, telinga dan mulut', 'melukis rambut'] },
+    { pre: 'Akhir sekali saya ', opts: ['mewarnakan lukisan', 'membuat kemasan', 'melukis bahagian lain'] },
+    { pre: 'Saya berasa ', opts: ['gembira', 'bangga', 'seronok'] }
+  ];
+
+  var COL = ['#F25C8A', '#FFA63D', '#22B8A8', '#8E5BD6', '#3D8BFF', '#F0443C', '#3DBE5C'];
+
+  /* ---------- Contoh langkah (SVG lukisan sendiri) ---------- */
+  function demoSVG(n) {
+    var g = '#8A8A99', d = '#3A3A48', s = '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect width="100" height="100" fill="#fff"/>';
+    var col = n >= 7;
+    if (n >= 5) {
+      s += '<path d="M24 46 Q20 14 50 13 Q80 14 76 46 Q70 28 50 28 Q30 28 24 46Z" fill="' + (col ? '#6B4226' : 'none') + '" stroke="' + d + '" stroke-width="2" stroke-linejoin="round"/>';
+    }
+    if (n >= 6) {
+      s += '<path d="M42 78 L42 88 M58 78 L58 88" stroke="' + d + '" stroke-width="2" stroke-linecap="round" fill="none"/>';
+      s += '<path d="M14 100 Q16 88 42 87 Q50 91 58 87 Q84 88 86 100Z" fill="' + (col ? '#3D8BFF' : 'none') + '" stroke="' + d + '" stroke-width="2" stroke-linejoin="round"/>';
+    }
+    if (n === 1) {
+      s += '<ellipse cx="50" cy="48" rx="25" ry="33" fill="none" stroke="' + g + '" stroke-width="1.2"/>';
+      s += '<ellipse cx="51" cy="47" rx="26" ry="32" fill="none" stroke="' + g + '" stroke-width="1.2"/>';
+      s += '<ellipse cx="49" cy="49" rx="24.5" ry="33.5" fill="none" stroke="' + g + '" stroke-width="1.2"/>';
+    } else {
+      s += '<ellipse cx="50" cy="48" rx="25" ry="33" fill="' + (col ? '#F6C79B' : 'none') + '" stroke="' + d + '" stroke-width="' + (n === 2 ? 2.8 : 2) + '"/>';
+    }
+    if (n === 3) {
+      s += '<g fill="none" stroke="' + g + '" stroke-width="1.4" stroke-linecap="round">';
+      s += '<path d="M33 46 Q38 42 43 46 M57 46 Q62 42 67 46"/><path d="M50 50 Q47 58 51 61"/><path d="M40 70 Q50 75 60 70"/>';
+      s += '<path d="M25 44 Q20 52 26 60 M75 44 Q80 52 74 60"/></g>';
+    }
+    if (n >= 4) {
+      s += '<g stroke="' + d + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
+      s += '<ellipse cx="38" cy="46" rx="5" ry="3.4" fill="#fff"/><ellipse cx="62" cy="46" rx="5" ry="3.4" fill="#fff"/>';
+      s += '<circle cx="38" cy="46" r="1.8" fill="' + d + '"/><circle cx="62" cy="46" r="1.8" fill="' + d + '"/>';
+      s += '<path d="M50 50 Q46 58 52 60" fill="none"/>';
+      s += '<path d="M39 69 Q50 77 61 69 Q50 72 39 69Z" fill="' + (col ? '#E5383B' : 'none') + '"/>';
+      s += '<path d="M25 44 Q19 52 26 60 M75 44 Q81 52 74 60" fill="' + (col ? '#F6C79B' : 'none') + '"/></g>';
+    }
+    if (n >= 6) s += '<path d="M31 38 Q38 34 44 38 M56 38 Q62 34 69 38" stroke="' + d + '" stroke-width="2" stroke-linecap="round" fill="none"/>';
+    return s + '</svg>';
+  }
+
+  /* ---------- Keadaan ---------- */
+  var step = 0, tool = 'pensel', size = 'sederhana', color = COLORS[0][1];
+  var hist = [[]], hi = 0, cs = null, activeId = null;
+  var snaps = [], chosen = [null, null, null, null];
+  function resetState() {
+    step = 0; tool = 'pensel'; size = 'sederhana'; color = COLORS[0][1];
+    hist = [[]]; hi = 0; cs = null; activeId = null; snaps = []; chosen = [null, null, null, null];
+  }
+  function items() { return hist[hi]; }
+  function commit(list) {
+    hist = hist.slice(0, hi + 1); hist.push(list); hi++;
+    if (hist.length > 120) { hist.shift(); hi--; }
+  }
+  function startIdx(list) {
+    for (var i = list.length - 1; i >= 0; i--) if (list[i].t === 'c') return i + 1;
+    return 0;
+  }
+  function hasArt(list) { return startIdx(list) < list.length; }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var cv = $('cv'), ctx = cv.getContext('2d');
+  var base = document.createElement('canvas'); base.width = W; base.height = H;
+  var bx = base.getContext('2d');
+
+  function strokeStyleFor(s) {
+    return s.k === 'e' ? { c: '#ffffff', a: 1 } : s.k === 'w' ? { c: s.c, a: 0.62 } : { c: PENCIL, a: 1 };
+  }
+  function drawStroke(c, s) {
+    var st = strokeStyleFor(s), p = s.p;
+    c.save();
+    c.globalAlpha = st.a; c.strokeStyle = st.c; c.fillStyle = st.c; c.lineWidth = s.w; c.lineCap = 'round'; c.lineJoin = 'round';
+    if (p.length === 1) { c.beginPath(); c.arc(p[0][0], p[0][1], s.w / 2, 0, Math.PI * 2); c.fill(); }
+    else {
+      c.beginPath(); c.moveTo(p[0][0], p[0][1]);
+      for (var i = 1; i < p.length - 1; i++) c.quadraticCurveTo(p[i][0], p[i][1], (p[i][0] + p[i + 1][0]) / 2, (p[i][1] + p[i + 1][1]) / 2);
+      var l = p[p.length - 1]; c.lineTo(l[0], l[1]); c.stroke();
+    }
+    c.restore();
+  }
+  function renderItems(c, list) {
+    c.fillStyle = '#ffffff'; c.fillRect(0, 0, W, H);
+    for (var i = startIdx(list); i < list.length; i++) drawStroke(c, list[i]);
+  }
+  function rebuild() { renderItems(bx, items()); }
+  function paint() { ctx.drawImage(base, 0, 0); if (cs) drawStroke(ctx, cs); }
+
+  /* ---------- Bina UI ---------- */
+  var tl = $('tl');
+  STEPS.forEach(function (s, i) {
+    var li = document.createElement('li');
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'tstep'; b.setAttribute('data-s', i + 1);
+    b.setAttribute('aria-label', 'Langkah ' + (i + 1) + ': ' + s.t);
+    b.innerHTML = '<span class="tnum">' + (i + 1) + '</span><span class="ttxt">' + s.short + '</span>';
+    b.addEventListener('click', function () { goStep(i); });
+    li.appendChild(b); tl.appendChild(li);
+  });
+  var tstepEls = tl.querySelectorAll('.tstep');
+
+  var TOOLS = [['pensel', '✏️', 'Pensel'], ['pemadam', '🧽', 'Pemadam'], ['warna', '🖍️', 'Pensel Warna']];
+  var toolsEl = $('tools');
+  TOOLS.forEach(function (t) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'tool'; b.setAttribute('data-t', t[0]);
+    b.innerHTML = '<span class="ic" aria-hidden="true">' + t[1] + '</span><span>' + t[2] + '</span>';
+    b.addEventListener('click', function () { setTool(t[0]); });
+    toolsEl.appendChild(b);
+  });
+  var toolEls = toolsEl.querySelectorAll('.tool');
+
+  var sizesEl = $('sizes');
+  SIZES.forEach(function (z) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'size'; b.setAttribute('data-z', z[0]);
+    b.innerHTML = '<span class="dot" style="width:' + z[2] + 'px;height:' + z[2] + 'px" aria-hidden="true"></span><span>' + z[1] + '</span>';
+    b.addEventListener('click', function () { size = z[0]; ui(); });
+    sizesEl.appendChild(b);
+  });
+  var sizeEls = sizesEl.querySelectorAll('.size');
+
+  var swEl = $('swatches');
+  COLORS.forEach(function (c) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'sw'; b.style.background = c[1]; b.setAttribute('data-c', c[1]);
+    b.setAttribute('aria-label', 'Warna ' + c[0]); b.title = c[0];
+    b.addEventListener('click', function () { color = c[1]; ui(); });
+    swEl.appendChild(b);
+  });
+  var swEls = swEl.querySelectorAll('.sw');
+
+  /* ---------- Tindakan ---------- */
+  function setTool(t) { tool = t; ui(); }
+  function widthNow() {
+    var idx = size === 'kecil' ? 0 : size === 'besar' ? 2 : 1;
+    return TOOLW[tool][idx];
+  }
+  function undo() { if (hi > 0) { hi--; rebuild(); paint(); ui(); } }
+  function redo() { if (hi < hist.length - 1) { hi++; rebuild(); paint(); ui(); } }
+  function clearAll() {
+    var list = items();
+    if (!hasArt(list)) { toast('Kertas sudah kosong.'); return; }
+    var n = list.slice(); n.push({ t: 'c' }); commit(n); rebuild(); paint(); ui();
+    toast('Semua lukisan dipadam. Tekan Undur jika tersilap.');
+  }
+  $('btnUndo').addEventListener('click', undo);
+  $('btnRedo').addEventListener('click', redo);
+  $('btnClear').addEventListener('click', clearAll);
+  $('guideBtn').addEventListener('click', function () {
+    var g = $('guide'); g.hidden = !g.hidden; ui();
+  });
+
+  function takeSnap(i) {
+    var c = document.createElement('canvas'); c.width = 320; c.height = 400;
+    var x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, 320, 400); x.drawImage(base, 0, 0, 320, 400);
+    snaps[i] = c;
+  }
+  function goStep(n) {
+    if (n === step) return;
+    takeSnap(step);
+    step = Math.max(0, Math.min(STEPS.length - 1, n));
+    tool = STEPS[step].tool;
+    $('guide').hidden = !STEPS[step].guide;
+    ui();
+    if (window.innerWidth < 900) { try { $('stepcard').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { $('stepcard').scrollIntoView(); } }
+  }
+  $('btnPrev').addEventListener('click', function () { if (step > 0) goStep(step - 1); });
+  $('btnNext').addEventListener('click', function () {
+    if (step < STEPS.length - 1) goStep(step + 1); else showStory();
+  });
+
+  /* ---------- Simpan PNG ---------- */
+  function toBlob(c) {
+    return new Promise(function (res) { try { c.toBlob(function (b) { res(b); }, 'image/png'); } catch (e) { res(null); } });
+  }
+  async function savePNG(c, fname) {
+    var blob = await toBlob(c);
+    if (!blob) { toast('Maaf, lukisan tidak dapat disimpan.'); return; }
+    var dl = null;
+    try { if (window.claude && window.claude.use) dl = await window.claude.use('downloads'); } catch (e) { dl = null; }
+    if (dl) {
+      try { await dl.save({ filename: fname, data: blob }); toast('Lukisan sudah disimpan!'); return; }
+      catch (err) {
+        var code = err && err.code;
+        if (code === 'declined') { toast('Simpan dibatalkan.'); return; }
+        if (code === 'rate_limited') { toast('Tunggu sebentar, kemudian cuba lagi.'); return; }
+        showPreview(blob); return;
+      }
+    }
+    try {
+      var url = URL.createObjectURL(blob), a = document.createElement('a');
+      a.href = url; a.download = fname; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 5000);
+      toast('Lukisan dimuat turun: ' + fname);
+    } catch (e) { showPreview(blob); }
+  }
+  $('btnSave').addEventListener('click', function () { rebuild(); savePNG(base, 'kawanku-langkah-' + (step + 1) + '.png'); });
+  $('saveA').addEventListener('click', function () { rebuild(); savePNG(base, 'kawanku-lukisan.png'); });
+
+  function storyLines() {
+    var out = [];
+    GROUPS.forEach(function (g, i) { if (chosen[i]) out.push(g.pre + chosen[i] + '.'); });
+    return out;
+  }
+  function wrapText(c, text, maxW) {
+    var words = text.split(' '), lines = [], cur = '';
+    words.forEach(function (w) {
+      var t = cur ? cur + ' ' + w : w;
+      if (c.measureText(t).width > maxW && cur) { lines.push(cur); cur = w; } else cur = t;
+    });
+    if (cur) lines.push(cur);
+    return lines;
+  }
+  async function buildComposite() {
+    try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch (e) {}
+    rebuild();
+    var m = document.createElement('canvas').getContext('2d');
+    m.font = '700 40px Nunito, "Segoe UI", sans-serif';
+    var lines = [];
+    storyLines().forEach(function (l) { lines = lines.concat(wrapText(m, l, 860)); });
+    var h = 1240 + (lines.length ? lines.length * 58 + 60 : 0);
+    var c = document.createElement('canvas'); c.width = 1000; c.height = h;
+    var x = c.getContext('2d');
+    x.fillStyle = '#fff'; x.fillRect(0, 0, 1000, h);
+    x.fillStyle = '#232A4D'; x.textBaseline = 'alphabetic';
+    x.font = '700 72px Fredoka, "Trebuchet MS", sans-serif'; x.fillText('Kawanku', 100, 95);
+    var nm = $('nama').value.trim();
+    if (nm) { x.font = '700 40px Nunito, "Segoe UI", sans-serif'; x.textAlign = 'right'; x.fillText('Nama: ' + nm, 900, 95); x.textAlign = 'left'; }
+    x.strokeStyle = '#3DBE5C'; x.lineWidth = 8; x.strokeRect(96, 146, 808, 1008);
+    x.drawImage(base, 100, 150, 800, 1000);
+    x.fillStyle = '#232A4D'; x.font = '700 40px Nunito, "Segoe UI", sans-serif';
+    lines.forEach(function (l, i) { x.fillText(l, 100, 1235 + i * 58 + 40); });
+    return c;
+  }
+  $('saveB').addEventListener('click', async function () { var c = await buildComposite(); savePNG(c, 'kawanku-cerita.png'); });
+
+  /* ---------- Dialog ---------- */
+  var modal = $('modal'), modalCleanup = null;
+  function openModal(title, node, buttons) {
+    $('mTitle').textContent = title; var mb = $('mBody'); mb.innerHTML = ''; if (node) mb.appendChild(node);
+    var bt = $('mBtns'); bt.innerHTML = '';
+    buttons.forEach(function (b) {
+      var el = document.createElement('button'); el.type = 'button'; el.className = 'btn ' + (b.cls || ''); el.textContent = b.label;
+      el.addEventListener('click', function () { closeModal(); if (b.fn) b.fn(); });
+      bt.appendChild(el);
+    });
+    modal.hidden = false; var f = bt.querySelector('button'); if (f) f.focus();
+  }
+  function closeModal() { modal.hidden = true; if (modalCleanup) { modalCleanup(); modalCleanup = null; } }
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+  function showPreview(blob) {
+    var url = URL.createObjectURL(blob), box = document.createElement('div');
+    var img = document.createElement('img'); img.src = url; img.alt = 'Lukisan kamu';
+    var p = document.createElement('p'); p.style.marginTop = '10px'; p.textContent = 'Tekan lama pada gambar ini, kemudian pilih Simpan Gambar.';
+    box.appendChild(img); box.appendChild(p);
+    modalCleanup = function () { setTimeout(function () { URL.revokeObjectURL(url); }, 1000); };
+    openModal('Simpan lukisan kamu', box, [{ label: 'Tutup', cls: 'btn-primary' }]);
+  }
+  function confirmReset() {
+    var p = document.createElement('p'); p.textContent = 'Lukisan dan cerita kamu akan dipadam. Kamu mahu mula semula?';
+    openModal('Mula semula?', p, [{ label: 'Tidak, teruskan' }, { label: 'Ya, mula semula', cls: 'btn-danger', fn: doReset }]);
+  }
+  function doReset() {
+    resetState(); $('guide').hidden = false; $('nama').value = '';
+    $('story').hidden = true; $('studio').hidden = false;
+    rebuild(); paint(); ui(); window.scrollTo(0, 0); toast('Mari mula semula!');
+  }
+  $('resetB').addEventListener('click', confirmReset);
+
+  /* ---------- Cerita ---------- */
+  var qsEl = $('qs');
+  GROUPS.forEach(function (g, gi) {
+    var d = document.createElement('div'); d.className = 'q';
+    var l = document.createElement('p'); l.className = 'ql'; l.textContent = g.pre + '…';
+    var ch = document.createElement('div'); ch.className = 'chips';
+    g.opts.forEach(function (o) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = o; b.setAttribute('aria-pressed', 'false');
+      b.addEventListener('click', function () {
+        chosen[gi] = chosen[gi] === o ? null : o;
+        var all = ch.querySelectorAll('.chip');
+        for (var i = 0; i < all.length; i++) all[i].setAttribute('aria-pressed', all[i].textContent === chosen[gi] ? 'true' : 'false');
+      });
+      ch.appendChild(b);
+    });
+    d.appendChild(l); d.appendChild(ch); qsEl.appendChild(d);
+  });
+  function showStory() {
+    takeSnap(step); rebuild();
+    var f = $('final').getContext('2d'); f.fillStyle = '#fff'; f.fillRect(0, 0, 400, 500); f.drawImage(base, 0, 0, 400, 500);
+    var strip = $('strip'); strip.innerHTML = '';
+    for (var i = 0; i < STEPS.length; i++) {
+      if (!snaps[i]) continue;
+      var fig = document.createElement('figure'); fig.className = 'sfig'; fig.setAttribute('data-s', i + 1);
+      var c = document.createElement('canvas'); c.width = 320; c.height = 400; c.getContext('2d').drawImage(snaps[i], 0, 0);
+      c.setAttribute('role', 'img'); c.setAttribute('aria-label', 'Lukisan pada langkah ' + (i + 1));
+      var cap = document.createElement('figcaption'); cap.textContent = (i + 1) + '. ' + STEPS[i].short;
+      fig.appendChild(c); fig.appendChild(cap); strip.appendChild(fig);
+    }
+    $('studio').hidden = true; $('story').hidden = false; window.scrollTo(0, 0);
+  }
+  $('back').addEventListener('click', function () { $('story').hidden = true; $('studio').hidden = false; ui(); });
+
+  /* ---------- Toast ---------- */
+  var toastEl = $('toast'), toastT = null;
+  function toast(msg) {
+    toastEl.textContent = msg; toastEl.classList.add('show');
+    clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove('show'); }, 2800);
+  }
+
+  /* ---------- Kemas kini paparan ---------- */
+  var lastStep = -1;
+  function ui() {
+    var s = STEPS[step], n = step + 1, i;
+    $('studio').setAttribute('data-s', n);
+    if (lastStep !== step) {
+      lastStep = step;
+      $('snum').textContent = n; $('stitle').textContent = s.t;
+      $('sprog').textContent = 'Langkah ' + n + ' daripada ' + STEPS.length;
+      $('sinst').textContent = s.i; $('stip').textContent = '💡 ' + s.tip;
+      $('demo').innerHTML = demoSVG(n);
+      $('btnNext').textContent = step < STEPS.length - 1 ? 'Langkah Seterusnya →' : 'Siap! Ceritakan →';
+      var mi = document.querySelectorAll('.mitem');
+      for (i = 0; i < mi.length; i++) {
+        var key = mi[i].getAttribute('data-m');
+        mi[i].className = 'mitem' + (s.mat.indexOf(key) >= 0 || (key === 'warna' && s.mat.indexOf('pensel warna') >= 0) ? ' use' : '');
+      }
+    }
+    for (i = 0; i < tstepEls.length; i++) tstepEls[i].className = 'tstep' + (i === step ? ' on' : i < step ? ' done' : '');
+    for (i = 0; i < toolEls.length; i++) toolEls[i].setAttribute('aria-pressed', toolEls[i].getAttribute('data-t') === tool ? 'true' : 'false');
+    for (i = 0; i < sizeEls.length; i++) sizeEls[i].setAttribute('aria-pressed', sizeEls[i].getAttribute('data-z') === size ? 'true' : 'false');
+    for (i = 0; i < swEls.length; i++) swEls[i].setAttribute('aria-pressed', swEls[i].getAttribute('data-c') === color ? 'true' : 'false');
+    $('colorBox').hidden = tool !== 'warna';
+    $('btnUndo').disabled = hi === 0;
+    $('btnRedo').disabled = hi >= hist.length - 1;
+    $('btnPrev').disabled = step === 0;
+    $('hint').hidden = hasArt(items()) || !!cs;
+    $('guideBtn').setAttribute('aria-pressed', $('guide').hidden ? 'false' : 'true');
+  }
+
+  /* ---------- Melukis ---------- */
+  function pt(ev) {
+    var r = cv.getBoundingClientRect();
+    return [(ev.clientX - r.left) * W / r.width, (ev.clientY - r.top) * H / r.height];
+  }
+  cv.addEventListener('pointerdown', function (e) {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    if (activeId !== null) { cs = null; activeId = null; rebuild(); }
+    e.preventDefault(); activeId = e.pointerId;
+    try { cv.setPointerCapture(e.pointerId); } catch (_) {}
+    cs = { t: 's', k: tool === 'pemadam' ? 'e' : tool === 'warna' ? 'w' : 'p', c: color, w: widthNow(), p: [pt(e)] };
+    $('hint').hidden = true; paint();
+  });
+  cv.addEventListener('pointermove', function (e) {
+    if (e.pointerId !== activeId || !cs) return;
+    e.preventDefault();
+    var evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+    if (!evs.length) evs = [e];
+    for (var i = 0; i < evs.length; i++) {
+      var q = pt(evs[i]), l = cs.p[cs.p.length - 1];
+      if (Math.abs(q[0] - l[0]) + Math.abs(q[1] - l[1]) >= 1.5) cs.p.push(q);
+    }
+    paint();
+  });
+  function endPointer(e) {
+    if (e.pointerId !== activeId) return;
+    activeId = null;
+    try { cv.releasePointerCapture(e.pointerId); } catch (_) {}
+    if (cs) { var s = cs; cs = null; var list = items().slice(); list.push(s); commit(list); rebuild(); paint(); ui(); }
+  }
+  cv.addEventListener('pointerup', endPointer);
+  cv.addEventListener('pointercancel', endPointer);
+  window.addEventListener('pointerup', endPointer);
+  window.addEventListener('pointercancel', endPointer);
+  cv.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+  ['touchstart', 'touchmove'].forEach(function (n) { cv.addEventListener(n, function (e) { e.preventDefault(); }, { passive: false }); });
+
+  document.addEventListener('keydown', function (e) {
+    if (!modal.hidden) { if (e.key === 'Escape') closeModal(); return; }
+    if (e.target && e.target.tagName === 'INPUT') return;
+    var mod = e.ctrlKey || e.metaKey;
+    if (mod && (e.key === 'z' || e.key === 'Z')) { e.preventDefault(); if (e.shiftKey) redo(); else undo(); }
+    else if (mod && (e.key === 'y' || e.key === 'Y')) { e.preventDefault(); redo(); }
+  });
+
+  /* warna garis masa langkah */
+  tstepEls.forEach(function (el, i) { el.style.setProperty('--e', COL[i]); });
+  rebuild(); paint(); ui();
+})();
+</script>
+
+</body></html>
